@@ -34,7 +34,7 @@
             color: #000000;
         }
         button {
-            border-radius: 5px;
+            border-radius: 4px;
             color: #000000;
             background-color: #ffee00d7;
         }
@@ -57,10 +57,12 @@
             padding: 10px;
             margin: 10px;
             text-align:center;
+            width: 100%;
+            position: fixed; 
+            top: 0;
         }
         .footer {
             background-color: #ffee00d7;
-            background-color: ;
             color: #000000;
             padding: 10px;
             text-align: center;
@@ -78,7 +80,7 @@
 
 <body>
     <div class="navbar">
-        <h1>Gerenciador de Contas Bancárias</h1>
+        <h2>Sistema de Contas Bancárias - ATV 12</h2>
     </div>
     </nav>
     <div class="container">
@@ -118,7 +120,7 @@
     </div>
 
     <script>
-       class ContaBancaria {
+        class ContaBancaria {
             constructor(agencia, numero, tipo, saldo) {
                 this.agencia = agencia;
                 this.numero = numero;
@@ -198,7 +200,7 @@
             
             for (const conta of contas) {
                 const item = document.createElement("li");
-                item.textContent = `Agência: ${conta.agencia}, Número: ${conta.numero}, Tipo: ${conta.tipo}, Saldo: R$ ${conta.saldo.toFixed(2)}`;
+                item.textContent = `Agência: ${conta.agencia} / Número: ${conta.numero} / Tipo: ${conta.tipo} / Saldo: R$ ${conta.saldo.toFixed(2)}`;
                 listaContas.appendChild(item);
             }
         }
