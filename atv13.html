@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #4c00ff;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .left-panel {
+            flex: 1;
+            padding: 20px;
+        }
+        .right-panel {
+            flex: 1;
+            background-color: #ffee00;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+        }
+        h1 {
+            color: #ffee00;
+        }
+        h2 {
+            color: #000000;
+        }
+        button {
+            border-radius: 4px;
+            color: #000000;
+            background-color: #ffee00d7;
+        }
+        label {
+            font-weight: bold;
+        }
+        select, input {
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .navbar {
+            background-color: #ffee00d7;
+            color: #000000;
+            padding: 10px;
+            margin: 10px;
+            text-align:center;
+            width: 100%;
+            position: fixed; 
+            top: 0;
+        }
+        .footer {
+            background-color: #ffee00d7;
+            color: #000000;
+            padding: 10px;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+
+        }
+        label {
+            color: #ffee00;
+        }
+    </style> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Gerenciador de Contas Bancárias</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <h2>Sistema de Contas Bancárias - ATV 12</h2>
+    </div>
+    </nav>
+    <div class="container">
+        <div class="left-panel">
+            <h1>Gerenciador de Contas Bancárias</h1>
+            <div>
+                <h2>Inserir Conta</h2>
+                <label for="agencia">Agência:</label>
+                <input type="text" id="agencia"><br>
+                <label for="numero">Número da Conta:</label>
+                <input type="text" id="numero"><br>
+                <label for="tipo">Tipo de Conta:</label>
+                <select id="tipo">
+                    <option value="Corrente">Conta Corrente</option>
+                    <option value="Poupanca">Conta Poupança</option>
+                    <option value="Universitaria">Conta Universitária</option>
+                </select><br>
+                <label for="saldo">Saldo:</label>
+                <input type="text" id="saldo"><br>
+                <button onclick="inserirConta()">Inserir</button>
+            </div>
+            <div>
+                <h2>Extrato</h2>
+                <button onclick="visualizarContas()">Visualizar</button>
+            </div>
+        </div>
+        <div class="right-panel">
+            <h2>Extrato</h2>
+                <ul id="listaContas">
+                </ul>            
+            <canvas id="graficoBarras" width="400" height="200"></canvas>
+            <canvas id="graficoPizza" width="400" height="200"></canvas>
+            <canvas id="graficoLinhas" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Yuri Catunda
+    </div>
+
+    <script>
+        class ContaBancaria {
+            constructor(agencia, numero, tipo, saldo) {
+                this.agencia = agencia;
+                this.numero = numero;
+                this.tipo = tipo;
+                this.saldo = parseFloat(saldo);
+            }
+            
+            sacar(valor) {
+                if (valor <= this.saldo) {
+                    this.saldo -= valor;
+                    return true;
+                }
+                return false;
+            }
+            
+            depositar(valor) {
+                if (valor > 0) {
+                    this.saldo += valor;
+                    return true;
+                }
+                return false;
+            }
+        }
+        
+        class ContaCorrente extends ContaBancaria {
+            constructor(agencia, numero, saldo, cartaoCredito) {
+                super(agencia, numero, "Conta Corrente", saldo);
+                this.cartaoCredito = cartaoCredito;
+            }
+        }
+        
+        class ContaPoupanca extends ContaBancaria {
+            constructor(agencia, numero, saldo) {
+                super(agencia, numero, "Conta Poupança", saldo);
+            }
+        }
+        
+        class ContaUniversitaria extends ContaBancaria {
+            constructor(agencia, numero, saldo) {
+                super(agencia, numero, "Conta Universitária", saldo);
+            }
+            
+            sacar(valor) {
+                if (this.tipo === "Conta Universitária" && valor <= 500) {
+                    return super.sacar(valor);
+                }
+                return false;
+            }
+        }
+        
+        const contas = [];
+        
+        function inserirConta() {
+            const agencia = document.getElementById("agencia").value;
+            const numero = document.getElementById("numero").value;
+            const tipo = document.getElementById("tipo").value;
+            const saldo = document.getElementById("saldo").value;
+            
+            let novaConta;
+            
+            if (tipo === "Corrente") {
+                const cartaoCredito = prompt("Informe o limite do cartão de crédito:");
+                novaConta = new ContaCorrente(agencia, numero, saldo, cartaoCredito);
+            } else if (tipo === "Poupanca") {
+                novaConta = new ContaPoupanca(agencia, numero, saldo);
+            } else if (tipo === "Universitaria") {
+                novaConta = new ContaUniversitaria(agencia, numero, saldo);
+            }
+            
+            contas.push(novaConta);
+            alert("Conta inserida com sucesso!");
+        }
+        
+        function visualizarContas() {
+            const listaContas = document.getElementById("listaContas");
+            listaContas.innerHTML = "";
+            
+            for (const conta of contas) {
+                const item = document.createElement("li");
+                item.textContent = `Agência: ${conta.agencia} / Número: ${conta.numero} / Tipo: ${conta.tipo} / Saldo: R$ ${conta.saldo.toFixed(2)}`;
+                listaContas.appendChild(item);
+            }
+        const dados = {
+  labels: ["Conta Corrente", "Conta Poupança", "Conta Universitária"],
+  datasets: [
+    {
+      label: "Número de Contas",
+      data: [
+        contas.filter((conta) => conta.tipo === "Conta Corrente").length,
+        contas.filter((conta) => conta.tipo === "Conta Poupança").length,
+        contas.filter((conta) => conta.tipo === "Conta Universitária").length,
+      ],
+      backgroundColor: ["rgba(255, 99, 132, 0.5)", "rgba(54, 162, 235, 0.5)", "rgba(255, 206, 86, 0.5)"],
+      borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
+      borderWidth: 1,
+    },
+  ],
+};
+
+       const ctxBarras = document.getElementById("graficoBarras").getContext("2d");
+new Chart(ctxBarras, {
+  type: "bar",
+  data: dados,
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
+
+        const ctxPizza = document.getElementById("graficoPizza").getContext("2d");
+new Chart(ctxPizza, {
+  type: "doughnut",
+  data: dados,
+});
+
+        const ctxLinhas = document.getElementById("graficoLinhas").getContext("2d");
+new Chart(ctxLinhas, {
+  type: "line",
+  data: {
+    labels: ["Conta 1", "Conta 2", "Conta 3", "Conta 4"], // Adicione rótulos apropriados aqui
+    datasets: [
+      {
+        label: "Saldo",
+        data: [1000, 2000, 1500, 3000], // Substitua com os saldos reais das contas
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+        fill: false,
+      },
+    ],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+       },
+     },
+   },
+ });
+}
