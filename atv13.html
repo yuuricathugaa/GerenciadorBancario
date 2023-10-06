@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             background-color: #4c00ff;
@@ -14,7 +16,8 @@
         .container {
             width: 80%;
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Alterado para centralizar ambos os painéis */
+            align-items: flex-start; /* Alinhado no topo para manter o layout anterior */
         }
         .left-panel {
             flex: 1;
@@ -22,24 +25,24 @@
         }
         .right-panel {
             flex: 1;
-            background-color: #ffee00;
+            background-color: #ffffff;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             margin: 10px;
+            text-align: center; /* Centralizado o conteúdo no painel direito */
         }
-        h1 {
-            color: #ffee00;
-        }
-        h2 {
+        h1, h2 {
             color: #000000;
         }
         button {
             border-radius: 4px;
             color: #000000;
-            background-color: #ffee00d7;
+            background-color: #ffffffd7;
+            margin-top: 10px; /* Adicionado um espaçamento superior para os botões */
         }
         label {
             font-weight: bold;
+            color: #ffffff; /* Alterada a cor do texto para branco */
         }
         select, input {
             margin-bottom: 10px;
@@ -51,39 +54,22 @@
         li {
             margin-bottom: 10px;
         }
-        .navbar {
-            background-color: #ffee00d7;
+        .navbar, .footer {
+            background-color: #ffffffd7;
             color: #000000;
             padding: 10px;
             margin: 10px;
-            text-align:center;
             width: 100%;
-            position: fixed; 
-            top: 0;
-        }
-        .footer {
-            background-color: #ffee00d7;
-            color: #000000;
-            padding: 10px;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-
-        }
-        label {
-            color: #ffee00;
-        }
-    </style> 
+        }     
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Gerenciador de Contas Bancárias</title>
 </head>
-
 <body>
     <div class="navbar">
         <h2>Sistema de Contas Bancárias - ATV 12</h2>
     </div>
-    </nav>
+    </div>
     <div class="container">
         <div class="left-panel">
             <h1>Gerenciador de Contas Bancárias</h1>
@@ -110,12 +96,10 @@
         </div>
         <div class="right-panel">
             <h2>Extrato</h2>
-                <ul id="listaContas">
-                </ul>            
+            <ul id="listaContas"></ul>
             <canvas id="graficoBarras" width="400" height="200"></canvas>
             <canvas id="graficoPizza" width="400" height="200"></canvas>
             <canvas id="graficoLinhas" width="400" height="200"></canvas>
-            </div>
         </div>
     </div>
     
@@ -267,3 +251,6 @@ new Chart(ctxLinhas, {
    },
  });
 }
+    </script>
+</body>
+</html>
